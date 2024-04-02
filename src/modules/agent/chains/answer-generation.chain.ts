@@ -15,7 +15,7 @@ export default function initGenerateAnswerChain(
   llm: BaseLanguageModel
 ): RunnableSequence<GenerateAnswerInput, string> {
   const answerQuestionPrompt = PromptTemplate.fromTemplate(`
-  Use ONLY the context provided to answer the following question.
+  Use only the context provided to answer the following question.
   
   Question:
   {question}
@@ -24,11 +24,10 @@ export default function initGenerateAnswerChain(
   {context}
   
   Answer as if you have been asked the original question.
-  Do NOT use your pre-trained knowledge. Do ONLY use the context provided.
+  Do NOT use your pre-trained knowledge.
   
   If you don't know the answer, just say that you don't know, don't try to make up an answer.
   Include links and sources where possible.
-  Remember - you can only use the context provided to answer the question.
 `);
   return RunnableSequence.from<GenerateAnswerInput, string>([
     answerQuestionPrompt,

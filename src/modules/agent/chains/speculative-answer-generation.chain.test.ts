@@ -6,6 +6,7 @@ import { ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 
+// Using "LLM as Judge" technique for evaluating the answer
 describe("Speculative Answer Generation Chain", () => {
   let llm: BaseChatModel;
   let chain: RunnableSequence;
