@@ -14,10 +14,26 @@ export interface GenerateAnswerInput {
 export default function initGenerateAnswerChain(
   llm: BaseLanguageModel
 ): RunnableSequence<GenerateAnswerInput, string> {
-  // TODO: Create a Prompt Template
-  // const answerQuestionPrompt = PromptTemplate.fromTemplate(`
-  // TODO: Return a RunnableSequence
-  // return RunnableSequence.from<GenerateAnswerInput, string>([])
+  const answerQuestionPrompt = PromptTemplate.fromTemplate(`
+  Use only the following context to answer the following question.
+  
+  Question:
+  {question}
+  
+  Context:
+  {context}
+  
+  Answer as if you have been asked the original question.
+  Do not use your pre-trained knowledge.
+  
+  If you don't know the answer, just say that you don't know, don't try to make up an answer.
+  Include links and sources where possible.
+`);
+  return RunnableSequence.from<GenerateAnswerInput, string>([
+    answerQuestionPrompt,
+    llm,
+    new StringOutputParser()
+  ]);
 }
 // end::function[]
 
