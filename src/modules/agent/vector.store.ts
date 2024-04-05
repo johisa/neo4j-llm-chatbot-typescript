@@ -22,17 +22,18 @@ export default async function initVectorStore(
       textNodeProperty: "plot",
       embeddingNodeProperty: "embedding",
       retrievalQuery: `
-        RETURN node.plot AS text,
+        RETURN
+        node.plot AS text,
         score,
         {
-            _id: elementid(node),
-            title: node.title,
-            directors: [ (person-[:DIRECTED]->node) | person.name ],
-            actors: [ (person-[:ACTED_IN]->node) | person.name, r.role],
-            tmdbId: node.tmdbId,
-            source: 'https://www.themoviedb.org/movie/'+ node.tmdbId
+          _id: elementid(node),
+          title: node.title,
+          directors: [ (person)-[:DIRECTED]->(node) | person.name ],
+          actors: [ (person)-[r:ACTED_IN]->(node) | [person.name, r.role] ],
+          tmdbId: node.tmdbId,
+          source: 'https://www.themoviedb.org/movie/'+ node.tmdbId
         } AS metadata
-        `
+      `,
     });
 }
 // end::function[]
