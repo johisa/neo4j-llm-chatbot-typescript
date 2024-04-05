@@ -43,7 +43,8 @@ export default async function initVectorRetrievalChain(
   const vectorStoreRetriever = vectorStore.asRetriever(5);
   const answerChain = initGenerateAnswerChain(llm)
 
-  // Build chain using super custom flow to link retrieved movies as context to the conversation history Response/Context.
+  // Build chain using super custom flow to link retrieved movies as context
+  // to the conversation history Response/Context.
   return (
 
     // CONTEXT retrieval step 1 - get documents using vector search
