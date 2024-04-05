@@ -6,6 +6,7 @@ import { close } from "../graph";
 describe("Vector Store", () => {
   afterAll(() => close());
 
+  //Miss-leading name since the vector index must be created manually first.
   it("should instantiate a new vector store", async () => {
     const embeddings = new OpenAIEmbeddings({
       openAIApiKey: process.env.OPENAI_API_KEY as string,
