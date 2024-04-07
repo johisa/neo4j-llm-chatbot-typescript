@@ -6,6 +6,10 @@ import { Neo4jGraph } from "@langchain/community/graphs/neo4j_graph";
 // import initCypherEvaluationChain from "../../../../solutions/modules/agent/tools/cypher/cypher-evaluation.chain";
 import initCypherEvaluationChain from "./cypher-evaluation.chain";
 
+// TODO why are they sending in the errors as input to the eval? Weird..
+//  Removed it from input and prompt
+
+
 describe("Cypher Evaluation Chain", () => {
   let graph: Neo4jGraph;
   let llm: BaseChatModel;
@@ -42,10 +46,15 @@ describe("Cypher Evaluation Chain", () => {
       question: "How many movies are in the database?",
       cypher: "MATCH (m:Muvee) RETURN count(m) AS count",
       schema: graph.getSchema(),
-      errors: ["Label Muvee does not exist"],
+      // errors: ["Label Muvee does not exist"],
     };
 
-    const { cypher, errors } = await chain.invoke(input);
+    const { cypher, corrected, errors } = await chain.invoke(input);
+
+    console.log(cypher);
+    console.log(corrected);
+    console.log(errors);
+    expect(corrected).toBe(true);
 
     expect(cypher).toContain("MATCH (m:Movie) RETURN count(m) AS count");
 
@@ -54,7 +63,7 @@ describe("Cypher Evaluation Chain", () => {
     let found = false;
 
     for (const error of errors) {
-      if (error.includes("label Muvee does not exist")) {
+      if (error.includes("label \'Muvee\' does not exist")) {
         found = true;
       }
     }
@@ -68,14 +77,18 @@ describe("Cypher Evaluation Chain", () => {
       cypher:
         'MATCH (m:Muvee)-[:ACTS_IN]->(a:Person) WHERE m.name = "The Matrix" RETURN a.name AS actor',
       schema: graph.getSchema(),
-      errors: [
-        "Label Muvee does not exist",
-        "Relationship type ACTS_IN does not exist",
-      ],
+      // errors: [
+      //   "Label Muvee does not exist",
+      //   "Relationship type ACTS_IN does not exist",
+      // ],
     };
 
-    const { cypher, errors } = await chain.invoke(input);
 
+    const { cypher, corrected, errors } = await chain.invoke(input);
+
+    console.log(cypher);
+    console.log(corrected);
+    console.log(errors);
     expect(cypher).toContain("MATCH (m:Movie");
     expect(cypher).toContain(":ACTED_IN");
 
@@ -98,7 +111,7 @@ describe("Cypher Evaluation Chain", () => {
       question: "How many movies are in the database?",
       cypher,
       schema: graph.getSchema(),
-      errors: ["Label Muvee does not exist"],
+      // errors: ["Label Muvee does not exist"],
     };
 
     const { cypher: updatedCypher, errors } = await chain.invoke(input);
@@ -115,7 +128,7 @@ describe("Cypher Evaluation Chain", () => {
       question: "What role did Emil Eifrem play in Neo4j - Into the Graph",
       cypher,
       schema: graph.getSchema(),
-      errors: [],
+      // errors: [],
     };
 
     const { cypher: updatedCypher, errors } = await chain.invoke(input);

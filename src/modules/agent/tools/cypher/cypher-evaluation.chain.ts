@@ -11,7 +11,7 @@ export type CypherEvaluationChainInput = {
   question: string;
   cypher: string;
   schema: string;
-  errors: string[] | string | undefined;
+  errors: string[] | string | undefined; // TODO why do they send in errors as input to the eval?
 };
 // end::interface[]
 
@@ -47,7 +47,7 @@ The query must:
 Respond with a JSON object with "cypher" and "errors" keys.
   * "cypher" - the corrected cypher statement
   * "corrected" - a boolean
-  * "errors" - A list of uncorrectable errors.  For example, if a label,
+  * "errors" - A list of all the corrected errors.  For example, if a label,
       relationship type or property does not exist in the schema.
       Provide a hint to the correct element where possible.
 
@@ -71,8 +71,6 @@ Question:
 
 Cypher Statement:
 {cypher}
-
-{errors}
 `
 // tag::function[]
 export default async function initCypherEvaluationChain(
