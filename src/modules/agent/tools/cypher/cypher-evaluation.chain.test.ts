@@ -3,6 +3,7 @@ import { config } from "dotenv";
 import { BaseChatModel } from "langchain/chat_models/base";
 import { RunnableSequence } from "@langchain/core/runnables";
 import { Neo4jGraph } from "@langchain/community/graphs/neo4j_graph";
+// import initCypherEvaluationChain from "../../../../solutions/modules/agent/tools/cypher/cypher-evaluation.chain";
 import initCypherEvaluationChain from "./cypher-evaluation.chain";
 
 describe("Cypher Evaluation Chain", () => {
